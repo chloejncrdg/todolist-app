@@ -4,13 +4,51 @@
 <html>
     <head>
         <title>Javascript Practice</title>
+        <link rel="stylesheet" href="style.css">
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
     </head>
 
     <body> 
-        <input id="todo-title" type="text" placeholder="Todo item here"/>
-        <input id="date-picker" type="date" value="yyyy-mm-dd"/>
-        <button id="add-todo" onclick="addTodo()";>Add todo</button>
+        <div class="todolist-user">
+            <p>Hello, </p>
+            <input type="text"/>
+        </div>
+        <div class="progress">
+            <p id="progress-report">0%</p>
+            <p>Completed Tasks</p>
+        </div>
+
+        <div class="timer-container">
+            <div class="section-container">
+              <button id="focus" class="btn btn-timer btn-focus">Focus</button>
+              <button id="shortbreak" class="btn btn-shortbreak">Short Break</button>
+              <button id="longbreak" class="btn btn-longbreak">Long Break</button>
+            </div>
+            <div class="time-btn-container">
+              <span id="time"></span>
+              <div class="btn-container">
+                <button id="btn-start" class="show">Start</button>
+                <button id="btn-pause" class="hide">Pause</button>
+                <button id="btn-reset" class="hide">
+                  <i class="fa-solid fa-rotate-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        <div class="add-container">
+            <div class="addtodo">
+                <input id="todo-title" type="text" placeholder="Todo item here"/>
+                <input id="date-picker" type="date" value="yyyy-mm-dd"/>
+                <button id="add-todo" onclick="addTodo()";>Add todo</button>
+            </div>
+        </div>
+       
         <div id="todo-list"></div>
     </body>
 
     <script src="script.js"></script>
+    <script src="timer.js"></script>

@@ -1,7 +1,7 @@
        // const todos = ['Get groceries', 'Wash car', 'Make dinner'];
        // Common sources of bugs in Javascript: Type Errors; it's why typescript is popular
 
-       // MODEL Section - anything related to maaging data in the model section
+       // MODEL Section - anything related to managing data in the model section
 
        let todos;
        let editingTodoId = null;
@@ -12,6 +12,7 @@
 
        const todoTitleInput = document.getElementById('todo-title');
        const addButton = document.getElementById('add-todo');
+
 
 
        // Get local storage
@@ -63,6 +64,7 @@
             });
 
             saveTodos(); // Call saveTodo in functions whenever array is modified
+            updateProgress();
         }
 
         // Deletes a todo 
@@ -80,6 +82,7 @@
             });
 
             saveTodos();
+            updateProgress();
         }
 
         // See if todo is checked
@@ -89,6 +92,8 @@
                 todo.isDone = checked;
             }
             });
+
+            updateProgress();
         }
 
        // See if todo is being edited
@@ -121,9 +126,18 @@
             localStorage.setItem('todos', JSON.stringify(todos));
         }
 
-      
+        function saveProgressReport(progressReport) {
+            localStorage.setItem('progressReport', JSON.stringify(progressReport));
+        }
+        
+        function loadProgressReport() {
+            const savedProgressReport = JSON.parse(localStorage.getItem('progressReport'));
+            return savedProgressReport || "0%"; // Default value if not found in localStorage
+        }
+        
 
         render();
+        updateProgressReport();
 
         // VIEW Section
 
@@ -205,9 +219,14 @@
             });
         } 
 
+        function updateProgressReport() {
+            const progressReport = document.getElementById('progress-report');
+            progressReport.innerText = `${loadProgressReport()} Done`;
+        }
     
 
         // CONTROLLER Section (anything the user interacts with)
+
 
         function addTodo() {
             // Check if the input has content before adding a todo
@@ -218,6 +237,7 @@
         
                 createTodo(title, dueDate);
                 render();
+                updateProgress();
         
                 // Clear the input after adding a todo
                 todoTitleInput.value = '';
@@ -226,6 +246,19 @@
                 toggleAddButtonState();
             }
         }
+
+        function calculateProgress() {
+            const totalTasks = todos.length;
+            const completedTasks = todos.filter(todo => todo.isDone).length;
+        
+            if (totalTasks === 0) {
+                return "0%"; // Handle the case when there are no tasks
+            }
+        
+            const percentage = (completedTasks / totalTasks) * 100;
+            return `${Math.round(percentage)}%`;
+        }
+        
 
         function updateTodo() {
             const editButton = event.target;
@@ -254,6 +287,7 @@
             editingTodoId = null;
         
             render();
+            updateProgress();
         }
         
         function deleteTodo(event) {
@@ -261,7 +295,8 @@
             const idToDelete = deleteButton.id;
 
            removeTodo(idToDelete);
-            render();
+           updateProgress();
+           render();
         }
 
         function checkTodo(event) {
@@ -271,8 +306,21 @@
         const checked = checkbox.checked;
 
         toggleTodo(todoId, checked);
+        saveTodos();
+        updateProgress();
         render();
       }
+
+      function updateProgress() {
+        const progress = calculateProgress();
+        updateProgressReport(progress);
+    
+        // Save the updated progress report
+        saveProgressReport(progress);
+    }
+
+    const initialProgress = calculateProgress();
+    updateProgress(initialProgress);
 
     
 
