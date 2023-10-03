@@ -142,12 +142,17 @@
         // VIEW Section
 
         function render() {
-
             datePicker.value = formattedDate;
-
+            
+        
             // Resets the list
             document.getElementById('todo-list').innerHTML = ' ';
 
+            const header = document.createElement('h2');
+            header.textContent = 'Your tasks';
+
+            
+        
             todos.forEach(function (todo) {
                 const element = document.createElement('div');
         
@@ -156,7 +161,7 @@
                     newTextbox.id = 'newTextBox';
                     newTextbox.type = 'text';
                     newTextbox.style = 'margin-left: 5px;';
-                    
+        
                     // Check if the to-do item is currently being edited and set the input value accordingly
                     if (editingTodoId === todo.id) {
                         newTextbox.value = todo.title;
@@ -166,8 +171,7 @@
                     newDatePicker.type = 'date';
                     newDatePicker.style = 'margin-left: 5px;';
                     newDatePicker.id = 'newDatePicker';
-                    newDatePicker.value= todo.dueDate;
-        
+                    newDatePicker.value = todo.dueDate;
         
                     const updateButton = document.createElement('button');
                     updateButton.innerText = 'Update';
@@ -181,47 +185,91 @@
                     updateButton.onclick = updatingTodo;
 
                 } else {
-                    element.innerText = todo.title + ' ' + todo.dueDate;
+                    // Create a container for the checkbox and todo title
+                    const checkboxTitleContainer = document.createElement('div');
+                    checkboxTitleContainer.style.display = 'flex'; // Make the checkbox and title display side by side
+                    checkboxTitleContainer.style.alignItems = 'center'; // Center the items vertically
 
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
-                    
+
                     checkbox.dataset.todoId = todo.id;
                     checkbox.onchange = checkTodo;
 
-        
                     if (todo.isDone === true) {
                         checkbox.checked = true;
                     } else {
                         checkbox.checked = false;
                     }
-                    element.prepend(checkbox);
 
+                    // Add styles to the checkbox
+                    checkbox.style.marginRight = '5px'; // Add spacing between checkbox and title
 
-                    const deleteButton = document.createElement('button');
-                    deleteButton.innerText = 'Delete';
-                    deleteButton.style = 'margin-left: 12px;';
-                    deleteButton.onclick = deleteTodo; // No parenthesis
-                    deleteButton.id = todo.id;
-                    element.appendChild(deleteButton);
+                    checkboxTitleContainer.appendChild(checkbox);
 
-                    const editButton = document.createElement('button');
-                    editButton.innerText = 'Edit';
-                    editButton.style = 'margin-left: 5px;';
-                    editButton.onclick = updateTodo;
-                    editButton.id = todo.id;
-                    element.appendChild(editButton);
+                    const titleElement = document.createElement('div');
+                    titleElement.innerText = todo.title + ' on ' + todo.dueDate;
 
+                    // Add styles to the title element
+                    titleElement.style.flex = '1'; // Allow it to take up remaining space
+                    titleElement.style.padding = '10px';
+
+                    checkboxTitleContainer.appendChild(titleElement);
+
+                    // Add the checkbox and title container to the main element
+                    element.appendChild(checkboxTitleContainer);
+
+                    // Create a container for the edit and delete buttons
+                    const buttonContainer = document.createElement('div');
+                    buttonContainer.style.display = 'flex'; // Make the buttons display side by side
+                    buttonContainer.style.width = '100%';
+                    buttonContainer.style.marginTop = '10px';
+
+                            const editButton = document.createElement('button');
+                            editButton.innerText = 'Edit';
+                            editButton.onclick = updateTodo;
+                            editButton.id = todo.id;
+                
+                            const deleteButton = document.createElement('button');
+                            deleteButton.innerText = 'Delete';
+                            deleteButton.onclick = deleteTodo; // No parenthesis
+                            deleteButton.id = todo.id;
+                
+                            // Add styles to the buttons
+                            editButton.style.flex = '1'; // Equal width for both buttons
+                            editButton.style.marginRight = '5px'; // Add spacing between buttons
+                            editButton.style.padding = '10px';
+                            editButton.style.border = '1px solid #ccc';
+                            editButton.style.borderRadius = '5px';
+                            editButton.style.boxSizing = 'border-box';
+                            editButton.style.cursor = 'pointer';
+                
+                            deleteButton.style.flex = '1'; // Equal width for both buttons
+                            deleteButton.style.marginLeft = '5px'; // Add spacing between buttons
+                            deleteButton.style.padding = '10px';
+                            deleteButton.style.border = '1px solid #ccc';
+                            deleteButton.style.borderRadius = '5px';
+                            deleteButton.style.boxSizing = 'border-box';
+                            deleteButton.style.cursor = 'pointer';
+                
+                            buttonContainer.appendChild(editButton);
+                            buttonContainer.appendChild(deleteButton);
+                            
+                            // Add the button container to the element
+                            element.appendChild(buttonContainer);
                 }
+                
         
                 const todoList = document.getElementById('todo-list');
+                
                 todoList.appendChild(element);
             });
-        } 
+        }
+        
 
         function updateProgressReport() {
             const progressReport = document.getElementById('progress-report');
-            progressReport.innerText = `${loadProgressReport()} Done`;
+            progressReport.innerText = `${loadProgressReport()} done!`;
         }
     
 
@@ -325,3 +373,35 @@
     
 
 // localStorage.clear();
+
+// List of background images
+const backgroundImages = [
+    'assets/leaves.gif',
+    'assets/nature.gif',
+    'assets/pixel.gif',
+    'assets/fire.gif',
+    'assets/city1.gif',
+    'assets/city2.gif',
+    'assets/city3.gif',
+    'assets/room1.gif',
+    'assets/room2.gif'
+];
+
+// Get references to the button and the body element
+const changeBackgroundButton = document.getElementById('change-background-button');
+const body = document.body;
+
+// Initialize a variable to keep track of the current background image index
+let currentBackgroundIndex = 0;
+
+// Function to change the background image
+function changeBackground() {
+    // Increment the background index or reset it to 0 if it exceeds the number of images
+    currentBackgroundIndex = (currentBackgroundIndex + 1) % backgroundImages.length;
+    
+    // Set the new background image
+    body.style.backgroundImage = `url('${backgroundImages[currentBackgroundIndex]}')`;
+}
+
+// Add a click event listener to the button
+moodButton.addEventListener('click', changeBackground);
